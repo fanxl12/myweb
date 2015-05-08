@@ -5,6 +5,7 @@
  *******************************************************************************/
 package com.fanxl.myweb.web.task;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletRequest;
@@ -12,7 +13,6 @@ import javax.validation.Valid;
 
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,12 +21,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springside.modules.web.Servlets;
+
 import com.fanxl.myweb.entity.Task;
 import com.fanxl.myweb.entity.User;
 import com.fanxl.myweb.service.account.ShiroDbRealm.ShiroUser;
 import com.fanxl.myweb.service.task.TaskService;
-import org.springside.modules.web.Servlets;
-
 import com.google.common.collect.Maps;
 
 /**
@@ -62,9 +62,9 @@ public class TaskController {
 			@RequestParam(value = "sortType", defaultValue = "auto") String sortType, Model model,
 			ServletRequest request) {
 		Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
-		Long userId = getCurrentUserId();
+		//Long userId = getCurrentUserId();
 
-		Page<Task> tasks = taskService.getUserTask(userId, searchParams, pageNumber, pageSize, sortType);
+		List<Task> tasks = taskService.getAllTask();
 
 		model.addAttribute("tasks", tasks);
 		model.addAttribute("sortType", sortType);
@@ -86,7 +86,6 @@ public class TaskController {
 	public String create(@Valid Task newTask, RedirectAttributes redirectAttributes) {
 		User user = new User(getCurrentUserId());
 		newTask.setUser(user);
-
 		taskService.saveTask(newTask);
 		redirectAttributes.addFlashAttribute("message", "创建任务成功");
 		return "redirect:/task/";
@@ -101,7 +100,7 @@ public class TaskController {
 
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	public String update(@Valid @ModelAttribute("task") Task task, RedirectAttributes redirectAttributes) {
-		taskService.saveTask(task);
+		taskService.updateTask(task);
 		redirectAttributes.addFlashAttribute("message", "更新任务成功");
 		return "redirect:/task/";
 	}

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.fanxl.myweb.repository.UserDao">
+	<!--
+		获取用户: 输出直接映射到对象, loginName列要"as loginName"以方便映射 ,team_id as "team.id"创建team对象并赋值
+	-->
+	<select id="findOne" parameterType="long" resultType="User">
+		select id, name, roles, phone,address,comments,fileName,filePath,fileSize,fileType,
+		loginName as loginName
+		from ss_user
+		where id=#{id}
+	</select>
+	
+	<select id="findByLoginName" resultType="User">
+	   select a.id, a.name,salt,roles,roles,loginName,password
+	   from ss_user a
+	   where loginName=#{loginName}
+	</select>
+
+	<!-- 查询用户,演示: 1.输入用map传入多个参数 2.<where>语句, 智能添加where和and关键字 3.输出直接映射对象 -->
+	<select id="search" parameterType="map" resultType="User">
+		select id, name, roles,registerDate,phone,address,comments, loginName as loginName 
+		from ss_user
+		<where>
+			<if test="loginName != null">
+				loginName=#{loginName}
+			</if>
+			<if test="name != null">
+				and name=#{name}
+			</if>
+		</where>
+	</select>
+
+	<!-- 插入用户： 1.由数据库生成id并赋值到user对象 2.输入用对象, 嵌套属性表达式#{team.id} -->
+	<insert id="save" parameterType="User" useGeneratedKeys="true" keyProperty="id">
+		insert into ss_user (
+		loginName, name,registerDate, password, roles,salt, phone,address,comments,fileName,filePath,fileSize,fileType)
+		values (
+		#{loginName}, #{name}, #{registerDate}, #{password}, #{roles},#{salt}, #{phone},#{address},#{comments},#{fileName},#{filePath},#{fileSize},#{fileType})
+	</insert>
+	
+	<update id="update" parameterType="user">
+		update ss_user set loginName=#{loginName}, password=#{password}, roles=#{roles},fileName=#{fileName},filePath=#{filePath},
+		fileSize=#{fileSize},fileType=#{fileType},salt=#{salt}, address=#{address}, comments=#{comments}, phone=#{phone} 
+		where id=#{id}
+	</update>
+	
+	<!-- 删除用户 -->
+	<delete id="delete" parameterType="long">
+	     delete from ss_user where id=#{id}
+	</delete>
+</mapper> 

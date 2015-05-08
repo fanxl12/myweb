@@ -5,6 +5,7 @@
  *******************************************************************************/
 package com.fanxl.myweb.service.account;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -13,15 +14,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import org.springside.modules.security.utils.Digests;
+import org.springside.modules.utils.Encodes;
+
 import com.fanxl.myweb.entity.User;
 import com.fanxl.myweb.repository.TaskDao;
 import com.fanxl.myweb.repository.UserDao;
 import com.fanxl.myweb.service.ServiceException;
 import com.fanxl.myweb.service.account.ShiroDbRealm.ShiroUser;
-import org.springside.modules.security.utils.Digests;
-import org.springside.modules.utils.Clock;
-import org.springside.modules.utils.Encodes;
 
 /**
  * 用户管理类.
@@ -30,7 +30,6 @@ import org.springside.modules.utils.Encodes;
  */
 // Spring Service Bean的标识.
 @Component
-@Transactional
 public class AccountService {
 
 	public static final String HASH_ALGORITHM = "SHA-1";
@@ -41,7 +40,6 @@ public class AccountService {
 
 	private UserDao userDao;
 	private TaskDao taskDao;
-	private Clock clock = Clock.DEFAULT;
 
 	public List<User> getAllUser() {
 		return (List<User>) userDao.findAll();
@@ -58,16 +56,19 @@ public class AccountService {
 	public void registerUser(User user) {
 		entryptPassword(user);
 		user.setRoles("user");
-		user.setRegisterDate(clock.getCurrentDate());
+		user.setRegisterDate(new Date());
 
 		userDao.save(user);
 	}
-
+	public List search(){
+		return userDao.search();
+	}
+	
 	public void updateUser(User user) {
 		if (StringUtils.isNotBlank(user.getPlainPassword())) {
 			entryptPassword(user);
 		}
-		userDao.save(user);
+		userDao.update(user);
 	}
 
 	public void deleteUser(Long id) {
@@ -76,7 +77,7 @@ public class AccountService {
 			throw new ServiceException("不能删除超级管理员用户");
 		}
 		userDao.delete(id);
-		taskDao.deleteByUserId(id);
+		//taskDao.deleteByUserId(id);
 
 	}
 
@@ -116,7 +117,4 @@ public class AccountService {
 		this.taskDao = taskDao;
 	}
 
-	public void setClock(Clock clock) {
-		this.clock = clock;
-	}
 }

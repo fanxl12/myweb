@@ -13,7 +13,7 @@ import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
-import com.fanxl.myweb.QuickStartServer;
+import com.fanxl.myweb.MyWebServer;
 import org.springside.modules.test.data.DataFixtures;
 import org.springside.modules.test.jetty.JettyFactory;
 import org.springside.modules.test.spring.Profiles;
@@ -64,8 +64,8 @@ public class BaseFunctionalTestCase {
 			// 设定Spring的profile
 			Profiles.setProfileAsSystemProperty(Profiles.FUNCTIONAL_TEST);
 
-			jettyServer = JettyFactory.createServerInSource(new URL(baseUrl).getPort(), QuickStartServer.CONTEXT);
-			JettyFactory.setTldJarNames(jettyServer, QuickStartServer.TLD_JAR_NAMES);
+			jettyServer = JettyFactory.createServerInSource(new URL(baseUrl).getPort(), MyWebServer.CONTEXT);
+			JettyFactory.setTldJarNames(jettyServer, MyWebServer.TLD_JAR_NAMES);
 			jettyServer.start();
 
 			logger.info("Jetty Server started at {}", baseUrl);

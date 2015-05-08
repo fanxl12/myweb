@@ -5,19 +5,20 @@
  *******************************************************************************/
 package com.fanxl.myweb.repository;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import java.util.List;
+
 import com.fanxl.myweb.entity.Task;
 
-public interface TaskDao extends PagingAndSortingRepository<Task, Long>, JpaSpecificationExecutor<Task> {
+@MyBatisRepository
+public interface TaskDao {
 
-	Page<Task> findByUserId(Long id, Pageable pageRequest);
+	List<Task> findAll();
 
-	@Modifying
-	@Query("delete from Task task where task.user.id=?1")
-	void deleteByUserId(Long id);
+	Task findOne(long id);
+	
+	void updateTask(Task task);
+
+	void save(Task task);
+
+	void delete(Long id);
 }

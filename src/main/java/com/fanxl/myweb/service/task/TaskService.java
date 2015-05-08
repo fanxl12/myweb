@@ -9,18 +9,18 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import com.fanxl.myweb.entity.Task;
-import com.fanxl.myweb.repository.TaskDao;
 import org.springside.modules.persistence.DynamicSpecifications;
 import org.springside.modules.persistence.SearchFilter;
 import org.springside.modules.persistence.SearchFilter.Operator;
+
+import com.fanxl.myweb.entity.Task;
+import com.fanxl.myweb.repository.TaskDao;
 
 // Spring Bean的标识.
 @Component
@@ -37,6 +37,10 @@ public class TaskService {
 	public void saveTask(Task entity) {
 		taskDao.save(entity);
 	}
+	
+	public void updateTask(Task task){
+		taskDao.updateTask(task);
+	}
 
 	public void deleteTask(Long id) {
 		taskDao.delete(id);
@@ -46,13 +50,13 @@ public class TaskService {
 		return (List<Task>) taskDao.findAll();
 	}
 
-	public Page<Task> getUserTask(Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
-			String sortType) {
-		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, sortType);
-		Specification<Task> spec = buildSpecification(userId, searchParams);
-
-		return taskDao.findAll(spec, pageRequest);
-	}
+//	public Page<Task> getUserTask(Long userId, Map<String, Object> searchParams, int pageNumber, int pageSize,
+//			String sortType) {
+//		PageRequest pageRequest = buildPageRequest(pageNumber, pageSize, sortType);
+//		Specification<Task> spec = buildSpecification(userId, searchParams);
+//
+//		return taskDao.findAll(spec, pageRequest);
+//	}
 
 	/**
 	 * 创建分页请求.

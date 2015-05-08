@@ -50,7 +50,7 @@ public class AccountServiceTest {
 	public void registerUser() {
 		User user = UserData.randomNewUser();
 		Date currentTime = new Date();
-		accountService.setClock(new MockClock(currentTime));
+		//accountService.setClock(new MockClock(currentTime));
 
 		accountService.registerUser(user);
 

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.fanxl.myweb.repository.TaskDao">
+	<!--
+		获取用户: 输出直接映射到对象, login_name列要"as loginName"以方便映射 ,team_id as "team.id"创建team对象并赋值
+	-->
+	<select id="findOne" parameterType="long" resultType="Task">
+		select id, title, description
+		from ss_task
+		where id=#{id}
+	</select>
+	
+	<update id="updateTask" parameterType="Task">
+		update ss_task set title=#{title}, description=#{description}
+		where id=#{id}
+	</update>
+	
+	<select id="findAll" resultType="Task">
+		select id, title, description
+		from ss_task
+	</select>
+	
+	<!-- 查询用户,演示: 1.输入用map传入多个参数 2.<where>语句, 智能添加where和and关键字 3.输出直接映射对象 -->
+	<select id="search" parameterType="map" resultType="Task">
+		select id, title, description
+		from ss_task
+		<where>
+			<if test="title != null">
+				title=#{title}
+			</if>
+		</where>
+	</select>
+
+	<!-- 插入用户： 1.由数据库生成id并赋值到user对象 2.输入用对象, 嵌套属性表达式#{team.id} -->
+	<insert id="save" parameterType="Task" useGeneratedKeys="true" keyProperty="id">
+		insert into ss_task 
+		(title, description, userId)
+		values (
+		#{title}, #{description}, #{user.id})
+	</insert>
+	
+	<!-- 删除用户 -->
+	<delete id="delete" parameterType="long">
+	     delete from ss_task where id=#{id}
+	</delete>
+</mapper> 

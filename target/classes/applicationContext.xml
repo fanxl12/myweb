@@ -55,6 +55,20 @@
 	<!-- JSR303 Validator定义 -->
  	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 	
+	<!-- MyBatis配置 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- 自动扫描entity目录, 省掉Configuration.xml里的手工配置 -->
+		<property name="typeAliasesPackage" value="com.fanxl.myweb.entity" />
+		<!-- 显式指定Mapper文件位置 -->
+		<property name="mapperLocations" value="classpath:/mybatis/*Mapper.xml" />
+	</bean>
+	<!-- 扫描basePackage下所有以@MyBatisRepository标识的 接口-->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.fanxl.myweb" />
+		<property name="annotationClass" value="com.fanxl.myweb.repository.MyBatisRepository"/>
+	</bean>
+	
 	<!-- production环境 -->
  	<beans profile="production">
  		<context:property-placeholder ignore-unresolvable="true"
@@ -133,8 +147,10 @@
 
 		<!-- 初始化数据表结构 与默认数据-->
 		<jdbc:initialize-database data-source="dataSource" ignore-failures="ALL">
-			<jdbc:script location="classpath:sql/h2/schema.sql" />
-			<jdbc:script location="classpath:data/h2/import-data.sql" encoding="UTF-8"/>
+<!-- 			<jdbc:script location="classpath:sql/h2/schema.sql" /> -->
+<!-- 			<jdbc:script location="classpath:data/h2/import-data.sql" encoding="UTF-8"/> -->
+			<jdbc:script location="classpath:sql/mysql/schema.sql" />
+			<jdbc:script location="classpath:data/mysql/import-data.sql" encoding="UTF-8"/>
 		</jdbc:initialize-database>
 	</beans>
 </beans>

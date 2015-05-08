@@ -18,6 +18,7 @@
 		<sitemesh.version>2.4.2</sitemesh.version>
 		<shiro.version>1.2.2</shiro.version>
 		<hibernate-validator.version>5.0.3.Final</hibernate-validator.version>
+		<mybatis.version>3.2.5</mybatis.version>
 		<jackson.version>2.3.1</jackson.version>
 		<aspectj.version>1.7.4</aspectj.version>
 		<slf4j.version>1.7.6</slf4j.version>
@@ -36,14 +37,14 @@
 		<java.version>1.6</java.version>
 	
 		<!-- 项目属性 -->
-		<jdbc.driver.groupId>com.h2database</jdbc.driver.groupId>
-		<jdbc.driver.artifactId>h2</jdbc.driver.artifactId>
-		<jdbc.driver.version>${h2.version}</jdbc.driver.version>
-		<!--
-			<jdbc.driver.groupId>mysql</jdbc.driver.groupId>
-			<jdbc.driver.artifactId>mysql-connector-java</jdbc.driver.artifactId>
-			<jdbc.driver.version>5.1.22</jdbc.driver.version>
-		-->	
+<!-- 		<jdbc.driver.groupId>com.h2database</jdbc.driver.groupId> -->
+<!-- 		<jdbc.driver.artifactId>h2</jdbc.driver.artifactId> -->
+<!-- 		<jdbc.driver.version>${h2.version}</jdbc.driver.version> -->
+		
+		<jdbc.driver.groupId>mysql</jdbc.driver.groupId>
+		<jdbc.driver.artifactId>mysql-connector-java</jdbc.driver.artifactId>
+		<jdbc.driver.version>5.1.22</jdbc.driver.version>
+		
 	</properties>
 
 	<prerequisites>
@@ -162,6 +163,18 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
 			<version>${hibernate-validator.version}</version>
+		</dependency>
+		
+		<!-- mybatis -->
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>${mybatis.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+			<version>1.2.2</version>
 		</dependency>
 
 		<!-- JSON begin -->
@@ -573,8 +586,10 @@
 								<property file="src/main/resources/application.properties" />
 								<sql driver="${jdbc.driver}" url="${jdbc.url}" userid="${jdbc.username}" password="${jdbc.password}" onerror="continue" encoding="${project.build.sourceEncoding}">
 									<classpath refid="maven.test.classpath" />
-									<transaction src="src/main/resources/sql/h2/schema.sql" />
-									<transaction src="src/test/resources/data/h2/import-data.sql" />
+									<transaction src="src/main/resources/sql/mysql/schema.sql"/>
+                                    <transaction src="src/test/resources/data/mysql/import-data.sql"/>
+<!-- 									<transaction src="src/main/resources/sql/h2/schema.sql" /> -->
+<!-- 									<transaction src="src/test/resources/data/h2/import-data.sql" /> -->
 								</sql>
 							</target>
 						</configuration>
